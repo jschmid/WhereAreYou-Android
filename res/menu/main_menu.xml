@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/share_group"
+        android:icon="@android:drawable/ic_menu_share"
+        android:showAsAction="ifRoom"
+        android:title="@string/share_position"
+        android:titleCondensed="@string/share_short"/>
+
+    <!--
+             android:actionProviderClass="android.widget.ShareActionProvider" 
+        android:icon="@android:drawable/ic_menu_share"
+    -->
+
+</menu>

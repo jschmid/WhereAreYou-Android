@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Where are you</string>
+    <string name="maps_api_key" translatable="false">AIzaSyA6V_KqfK_rg9VuZYW5LvSBxRE4LQYkVJ0</string>
+    <string name="dialog_name_title">Hello stranger!\nWhat\'s your name?</string>
+    <string name="hint_username">Name that appears on the map</string>
+    <string name="share_position">Share my position</string>
+    <string name="share_short">Share</string>
+
+</resources>
