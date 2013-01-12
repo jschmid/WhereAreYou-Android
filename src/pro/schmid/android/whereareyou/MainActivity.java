@@ -56,7 +56,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 			// String scheme = data.getScheme();
 			// String host = data.getHost();
 			List<String> params = data.getPathSegments();
-			mRoomFromIntent = params.get(0).substring(1);
+			mRoomFromIntent = params.get(0);
 		}
 
 		mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
