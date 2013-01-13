@@ -15,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -61,6 +62,8 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 
 		mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
 		getUserName();
 	}
 
@@ -101,8 +104,13 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-			case R.id.share_group:
+			case R.id.menu_share_group:
 				shareGroup();
+				return true;
+
+			case R.id.menu_prefs:
+				Intent intent = new Intent(this, SettingsActivity.class);
+				startActivity(intent);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -169,8 +177,6 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	};
 
 	private void getUserName() {
-		mPreferences = getSharedPreferences(Constants.GENERAL_PREFS, Context.MODE_PRIVATE);
-
 		mUsername = mPreferences.getString(Constants.PREF_NAME, null);
 
 		if (mUsername == null) {
