@@ -169,7 +169,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	};
 
 	private void getUserName() {
-		mPreferences = getPreferences(Context.MODE_PRIVATE);
+		mPreferences = getSharedPreferences(Constants.GENERAL_PREFS, Context.MODE_PRIVATE);
 
 		mUsername = mPreferences.getString(Constants.PREF_NAME, null);
 

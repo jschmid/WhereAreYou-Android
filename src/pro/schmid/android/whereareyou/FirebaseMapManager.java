@@ -10,6 +10,8 @@ import pro.schmid.android.androidonfire.Firebase;
 import pro.schmid.android.androidonfire.callbacks.DataEvent;
 import pro.schmid.android.androidonfire.callbacks.EventType;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -23,7 +25,10 @@ import com.google.gson.JsonPrimitive;
 
 class FirebaseMapManager {
 	private final Activity mActivity;
+	private final SharedPreferences mapsPrefs;
+
 	private final GoogleMap mMap;
+
 	private final Firebase mFirebase;
 	private final Firebase mMyself;
 	private final Firebase mPosition;
@@ -34,21 +39,30 @@ class FirebaseMapManager {
 
 	public FirebaseMapManager(Activity a, GoogleMap mMap, Firebase parent, String username) {
 		this.mActivity = a;
-		this.mMap = mMap;
-		this.mFirebase = parent;
-		this.mMyself = mFirebase.push();
-		this.mPosition = mMyself.child(Constants.POSITION);
-		this.mChildName = mMyself.name();
+		this.mapsPrefs = this.mActivity.getSharedPreferences(Constants.MAPS_PREFS, Context.MODE_PRIVATE);
 
-		// Firebase presence = mMyself.child("presence");
-		// presence.setOnDisconnect(new JsonPrimitive(false));
-		// presence.set(new JsonPrimitive(true));
-		// this.mMyself.removeOnDisconnect();
+		this.mMap = mMap;
+
+		this.mFirebase = parent;
+
+		// Get current handle
+		String parentName = parent.name();
+		String myself = mapsPrefs.getString(parentName, null);
+		if (myself != null) {
+			this.mMyself = mFirebase.child(myself);
+			this.mChildName = myself;
+		} else {
+			this.mMyself = mFirebase.push();
+			this.mChildName = mMyself.name();
+			mapsPrefs.edit().putString(parentName, this.mChildName).commit();
+
+			this.mMyself.child(Constants.NAME).set(new JsonPrimitive(username));
+		}
+
+		this.mPosition = mMyself.child(Constants.POSITION);
 
 		mFirebase.on(EventType.child_added, personAdded);
 		mFirebase.on(EventType.child_removed, personRemoved);
-
-		this.mMyself.child(Constants.NAME).set(new JsonPrimitive(username));
 	}
 
 	void setMyLocation(Location location) {
