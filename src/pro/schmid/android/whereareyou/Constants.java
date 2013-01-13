@@ -18,6 +18,8 @@ public class Constants {
 	// Maps preferences
 	public static final String MAPS_PREFS = "maps";
 
+	public static final float MAP_ZOOM = 15;;
+
 	public static final DateFormat DATE_FORMATTER = DateFormat.getDateTimeInstance();
 
 	public static final String BASE_URL = "http://w.schmid.pro/";

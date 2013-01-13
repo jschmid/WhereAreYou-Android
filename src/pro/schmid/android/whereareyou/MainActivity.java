@@ -23,8 +23,11 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends FragmentActivity implements NameDialogListener {
 
@@ -148,10 +151,20 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 
 	// Define a listener that responds to location updates
 	private final LocationListener locationListener = new LocationListener() {
+
+		private boolean mFirstCenter = true;
+
 		@Override
 		public void onLocationChanged(Location location) {
 			if (mFirebaseMapManager != null) {
 				mFirebaseMapManager.setMyLocation(location);
+
+				if (mFirstCenter) {
+					mFirstCenter = false;
+
+					CameraUpdate newLatLngZoom = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), Constants.MAP_ZOOM);
+					mMap.animateCamera(newLatLngZoom);
+				}
 			}
 		}
 
