@@ -6,6 +6,10 @@
     <string name="dialog_name_title">Hello stranger!\nWhat\'s your name?</string>
     <string name="hint_username">Name that appears on the map</string>
     <string name="share_position">Share my position</string>
-    <string name="share_short">Share</string>
+    <string name="preferences_menu">Settings</string>
+    <string name="preferences_title">General preferences</string>
+    <string name="preferences_name_dialog">Enter your name</string>
+    <string name="preferences_name_summary">The name used to show your position</string>
+    <string name="preferences_name_title">Your name</string>
 
 </resources>

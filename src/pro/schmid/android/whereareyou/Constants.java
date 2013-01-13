@@ -12,7 +12,6 @@ public class Constants {
 	public static final String DATETIME = "datetime";
 
 	// General preferences
-	public static final String GENERAL_PREFS = "general";
 	public static final String PREF_NAME = "name";
 
 	// Maps preferences
