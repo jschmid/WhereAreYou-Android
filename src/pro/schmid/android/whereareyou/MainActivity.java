@@ -93,7 +93,10 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mEngine.onDestroy();
+
+		if (mEngine != null) {
+			mEngine.onDestroy();
+		}
 	}
 
 	@Override
