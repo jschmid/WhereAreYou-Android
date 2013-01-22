@@ -1,5 +1,6 @@
 package pro.schmid.android.whereareyou;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
@@ -12,12 +13,14 @@ import pro.schmid.android.androidonfire.callbacks.EventType;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -69,6 +72,7 @@ class FirebaseMapManager {
 		JsonObject loc = new JsonObject();
 		loc.addProperty(Constants.LAT, location.getLatitude());
 		loc.addProperty(Constants.LONG, location.getLongitude());
+		loc.addProperty(Constants.ACCURACY, location.getAccuracy());
 		loc.addProperty(Constants.DATETIME, System.currentTimeMillis());
 		mPosition.set(loc);
 	}
@@ -129,10 +133,19 @@ class FirebaseMapManager {
 			JsonObject el = val.getAsJsonObject();
 			double lat = el.get(Constants.LAT).getAsDouble();
 			double lng = el.get(Constants.LONG).getAsDouble();
+			double accuracy = el.get(Constants.ACCURACY).getAsDouble();
 			long datetime = el.get(Constants.DATETIME).getAsLong();
 
 			final String date = getStringFromTimestamp(datetime);
 			final LatLng ll = new LatLng(lat, lng);
+
+			ArrayList<LatLng> accuracyPoints = Utils.getCirclePoints(ll, accuracy);
+			final PolygonOptions polygonOptions = new PolygonOptions()
+					.addAll(accuracyPoints)
+					.strokeColor(Color.RED)
+					.strokeWidth(4)
+					.fillColor(Color.parseColor("#22FF0000"))
+					.geodesic(true);
 
 			if (marker != null) {
 
@@ -153,6 +166,8 @@ class FirebaseMapManager {
 					public void run() {
 						Marker marker = mMap.addMarker(markerOptions);
 						mMarkers.put(parentName, marker);
+
+						mMap.addPolygon(polygonOptions);
 					}
 				});
 			}

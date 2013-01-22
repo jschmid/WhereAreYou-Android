@@ -9,6 +9,7 @@ public class Constants {
 	public static final String POSITION = "position";
 	public static final String LAT = "lat";
 	public static final String LONG = "long";
+	public static final String ACCURACY = "accuracy";
 	public static final String DATETIME = "datetime";
 
 	// General preferences
