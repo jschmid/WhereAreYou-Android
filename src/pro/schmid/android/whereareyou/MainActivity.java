@@ -57,8 +57,6 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 
 		Uri data = getIntent().getData();
 		if (data != null) {
-			// String scheme = data.getScheme();
-			// String host = data.getHost();
 			List<String> params = data.getPathSegments();
 			mRoomFromIntent = params.get(0);
 		}

@@ -139,7 +139,8 @@ class FirebaseMapManager {
 			final String date = getStringFromTimestamp(datetime);
 			final LatLng ll = new LatLng(lat, lng);
 
-			ArrayList<LatLng> accuracyPoints = Utils.getCirclePoints(ll, accuracy);
+			double radius = accuracy > Constants.MAX_ACCURACY ? Constants.MAX_ACCURACY : accuracy;
+			ArrayList<LatLng> accuracyPoints = Utils.getCirclePoints(ll, radius);
 			final PolygonOptions polygonOptions = new PolygonOptions()
 					.addAll(accuracyPoints)
 					.strokeColor(Color.RED)
