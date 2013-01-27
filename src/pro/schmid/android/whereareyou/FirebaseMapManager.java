@@ -10,16 +10,20 @@ import pro.schmid.android.androidonfire.DataSnapshot;
 import pro.schmid.android.androidonfire.Firebase;
 import pro.schmid.android.androidonfire.callbacks.DataEvent;
 import pro.schmid.android.androidonfire.callbacks.EventType;
+import pro.schmid.android.whereareyou.utils.ColorUtils;
+import pro.schmid.android.whereareyou.utils.Constants;
+import pro.schmid.android.whereareyou.utils.Utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -38,7 +42,9 @@ class FirebaseMapManager {
 	private final String mChildName;
 
 	private final Map<String, Marker> mMarkers = new ConcurrentHashMap<String, Marker>();
+	private final Map<String, Polygon> mPolygon = new ConcurrentHashMap<String, Polygon>();
 	private final Map<String, String> mNames = new ConcurrentHashMap<String, String>();
+	private final Map<String, Integer> mId = new ConcurrentHashMap<String, Integer>();
 
 	public FirebaseMapManager(Activity a, GoogleMap mMap, Firebase parent, String username) {
 		this.mActivity = a;
@@ -89,6 +95,8 @@ class FirebaseMapManager {
 
 			String personName = snapshot.val().getAsJsonObject().get(Constants.NAME).getAsString();
 			mNames.put(snapshotName, personName);
+			mId.put(snapshotName, ColorUtils.getCurrentColor());
+			ColorUtils.incrementColor();
 
 			Firebase positionRef = snapshot.ref().child(Constants.POSITION);
 			positionRef.on(EventType.value, positionCallback);
@@ -124,11 +132,10 @@ class FirebaseMapManager {
 				return;
 			}
 
+			// Get data
 			Firebase ref = snapshot.ref();
 			Firebase parent = ref.parent();
 			final String parentName = parent.name();
-
-			final Marker marker = mMarkers.get(parentName);
 
 			JsonObject el = val.getAsJsonObject();
 			double lat = el.get(Constants.LAT).getAsDouble();
@@ -139,15 +146,10 @@ class FirebaseMapManager {
 			final String date = getStringFromTimestamp(datetime);
 			final LatLng ll = new LatLng(lat, lng);
 
-			double radius = accuracy > Constants.MAX_ACCURACY ? Constants.MAX_ACCURACY : accuracy;
-			ArrayList<LatLng> accuracyPoints = Utils.getCirclePoints(ll, radius);
-			final PolygonOptions polygonOptions = new PolygonOptions()
-					.addAll(accuracyPoints)
-					.strokeColor(Color.RED)
-					.strokeWidth(4)
-					.fillColor(Color.parseColor("#22FF0000"))
-					.geodesic(true);
+			int colorId = mId.get(parentName);
 
+			// Put or move the marker
+			final Marker marker = mMarkers.get(parentName);
 			if (marker != null) {
 
 				mActivity.runOnUiThread(new Runnable() {
@@ -160,18 +162,45 @@ class FirebaseMapManager {
 			} else {
 
 				final String personName = mNames.get(parentName);
-				final MarkerOptions markerOptions = new MarkerOptions().position(ll).title(personName).snippet(date);
+				final MarkerOptions markerOptions = new MarkerOptions().position(ll)
+						.title(personName)
+						.snippet(date)
+						.icon(BitmapDescriptorFactory.defaultMarker(ColorUtils.MARKER_COLORS[colorId]));
 
 				mActivity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						Marker marker = mMap.addMarker(markerOptions);
 						mMarkers.put(parentName, marker);
-
-						mMap.addPolygon(polygonOptions);
 					}
 				});
 			}
+
+			// Put or move the accuracy circle
+			double radius = accuracy > Constants.MAX_ACCURACY ? Constants.MAX_ACCURACY : accuracy;
+			ArrayList<LatLng> accuracyPoints = Utils.getCirclePoints(ll, radius);
+			final Polygon polygon = mPolygon.get(parentName);
+
+			final PolygonOptions polygonOptions = new PolygonOptions()
+					.addAll(accuracyPoints)
+					.strokeColor(ColorUtils.ACCURACY_STROKE_COLORS[colorId])
+					.strokeWidth(4)
+					.fillColor(ColorUtils.ACCURACY_FILL_COLORS[colorId])
+					.geodesic(true);
+
+			mActivity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+
+					// Remove old polygon
+					if (polygon != null) {
+						polygon.remove();
+					}
+
+					Polygon polygon = mMap.addPolygon(polygonOptions);
+					mPolygon.put(parentName, polygon);
+				}
+			});
 		}
 	};
 

@@ -6,6 +6,7 @@ import pro.schmid.android.androidonfire.Firebase;
 import pro.schmid.android.androidonfire.FirebaseEngine;
 import pro.schmid.android.androidonfire.callbacks.FirebaseLoaded;
 import pro.schmid.android.whereareyou.NameFragment.NameDialogListener;
+import pro.schmid.android.whereareyou.utils.Constants;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;

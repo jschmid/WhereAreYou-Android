@@ -1,4 +1,4 @@
-package pro.schmid.android.whereareyou;
+package pro.schmid.android.whereareyou.utils;
 
 import java.util.ArrayList;
 
