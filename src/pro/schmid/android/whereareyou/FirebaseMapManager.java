@@ -108,12 +108,19 @@ class FirebaseMapManager {
 		public void callback(DataSnapshot snapshot, String prevChildName) {
 			String name = snapshot.name();
 			final Marker removed = mMarkers.remove(name);
+			final Polygon polygon = mPolygon.get(name);
 
-			if (removed != null) {
+			if (removed != null || polygon != null) {
 				mActivity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						removed.remove();
+						if (removed != null) {
+							removed.remove();
+						}
+
+						if (polygon != null) {
+							polygon.remove();
+						}
 					}
 				});
 			}
