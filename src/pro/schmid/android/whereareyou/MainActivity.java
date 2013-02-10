@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -74,6 +75,13 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+
+		EasyTracker.getInstance().activityStart(this);
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 
@@ -91,6 +99,13 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		super.onPause();
 
 		mLocationManager.removeUpdates(locationListener);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		EasyTracker.getInstance().activityStop(this);
 	}
 
 	@Override
