@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -47,7 +48,9 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
+		setProgressBarIndeterminateVisibility(true);
 
 		int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (googlePlayServicesAvailable != ConnectionResult.SUCCESS) {
@@ -106,6 +109,15 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		MenuItem findItem = menu.findItem(R.id.menu_share_group);
+		findItem.setVisible(mCurrentFirebase != null);
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -154,6 +166,9 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 				if (myLocation != null) {
 					mFirebaseMapManager.setMyLocation(myLocation);
 				}
+
+				invalidateOptionsMenu();
+				setProgressBarIndeterminateVisibility(false);
 			}
 		});
 		mEngine.loadEngine(this);

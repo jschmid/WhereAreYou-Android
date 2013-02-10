@@ -5,7 +5,8 @@
         android:id="@+id/menu_share_group"
         android:icon="@android:drawable/ic_menu_share"
         android:showAsAction="withText|always"
-        android:title="@string/share_position"/>
+        android:title="@string/share_position"
+        android:visible="false"/>
     <item
         android:id="@+id/menu_prefs"
         android:icon="@android:drawable/ic_menu_preferences"

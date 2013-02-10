@@ -52,6 +52,8 @@ class FirebaseMapManager {
 
 		this.mMap = mMap;
 
+		ColorUtils.resetColor();
+
 		this.mFirebase = parent;
 
 		// Get current handle
@@ -64,10 +66,10 @@ class FirebaseMapManager {
 			this.mMyself = mFirebase.push();
 			this.mChildName = mMyself.name();
 			mapsPrefs.edit().putString(parentName, this.mChildName).commit();
-
-			this.mMyself.child(Constants.NAME).set(new JsonPrimitive(username));
 		}
 
+		// Always set the name, in case the user changed it
+		this.mMyself.child(Constants.NAME).set(new JsonPrimitive(username));
 		this.mPosition = mMyself.child(Constants.POSITION);
 
 		mFirebase.on(EventType.child_added, personAdded);

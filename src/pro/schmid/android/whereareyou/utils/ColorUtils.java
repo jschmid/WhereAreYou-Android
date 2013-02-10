@@ -37,6 +37,10 @@ public class ColorUtils {
 		}
 	}
 
+	public static void resetColor() {
+		sColorCounter = 0;
+	}
+
 	public static int getCurrentColor() {
 		return sColorCounter % COLORS_LENGTH;
 	}
