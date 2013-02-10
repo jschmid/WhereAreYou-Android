@@ -7,6 +7,7 @@ import pro.schmid.android.androidonfire.FirebaseEngine;
 import pro.schmid.android.androidonfire.callbacks.FirebaseLoaded;
 import pro.schmid.android.whereareyou.NameFragment.NameDialogListener;
 import pro.schmid.android.whereareyou.utils.Constants;
+import pro.schmid.android.whereareyou.utils.Utils;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -210,8 +211,15 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		mUsername = mPreferences.getString(Constants.PREF_NAME, null);
 
 		if (mUsername == null) {
-			DialogFragment newFragment = NameFragment.newInstance();
-			newFragment.show(getSupportFragmentManager(), "name");
+			// Try to get the username from the accounts
+			mUsername = Utils.getAccountUsername(this);
+
+			if (mUsername == null) {
+				DialogFragment newFragment = NameFragment.newInstance();
+				newFragment.show(getSupportFragmentManager(), "name");
+			} else {
+				setUsername(mUsername);
+			}
 		} else {
 			startApplication();
 		}
@@ -220,9 +228,11 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	@Override
 	public void onDialogPositiveClick(NameFragment dialog) {
 		mUsername = dialog.getUsername();
+		setUsername(mUsername);
+	}
 
+	private void setUsername(String username) {
 		mPreferences.edit().putString(Constants.PREF_NAME, mUsername).commit();
-
 		startApplication();
 	}
 
