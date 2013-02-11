@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/logo_imageview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/about_title_margin"
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+        android:id="@+id/logo_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/about_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo_imageview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/about_title_margin"
+        android:text="@string/about_text" />
+
+    <ImageButton
+        android:id="@+id/button_mail"
+        style="@style/about_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/about_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/about_title_margin"
+        android:contentDescription="@string/about_mail"
+        android:src="@drawable/mail_logo" />
+
+    <ImageButton
+        android:id="@+id/button_twitter"
+        style="@style/about_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/about_text"
+        android:layout_alignTop="@+id/button_mail"
+        android:contentDescription="@string/about_twitter"
+        android:src="@drawable/twitter_logo" />
+
+    <ImageButton
+        android:id="@+id/button_gplus"
+        style="@style/about_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/title_textview"
+        android:layout_alignTop="@+id/button_mail"
+        android:contentDescription="@string/about_gplus"
+        android:src="@drawable/gplus_logo" />
+
+</RelativeLayout>

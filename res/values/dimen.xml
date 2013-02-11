@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="about_title_margin">24dp</dimen>
+    <dimen name="about_icons_size">32dp</dimen>
+
+</resources>

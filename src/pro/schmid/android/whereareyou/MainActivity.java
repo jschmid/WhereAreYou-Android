@@ -145,6 +145,11 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 				Intent intent = new Intent(this, SettingsActivity.class);
 				startActivity(intent);
 				return true;
+
+			case R.id.menu_about:
+				intent = new Intent(this, AboutActivity.class);
+				startActivity(intent);
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}

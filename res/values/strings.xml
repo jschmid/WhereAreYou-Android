@@ -11,5 +11,17 @@
     <string name="preferences_name_dialog">Enter your name</string>
     <string name="preferences_name_summary">The name used to show your position</string>
     <string name="preferences_name_title">Your name</string>
+    <string name="about_menu">About</string>
+    <string name="about_title">Where are you %s</string>
+    <string name="about_text">Jonas Schmid &#169; 2013</string>
+    <string name="about_mail">Email</string>
+    <string name="about_twitter">Twitter</string>
+    <string name="about_gplus">Google Plus</string>
+    <string name="about_activity">About "Where are you"</string>
+    <string name="about_my_email">jonas@schmid.pro</string>
+    <string name="about_my_email_subject">Contact about "where are you"</string>
+    <string name="about_my_twitter">http://www.twitter.com/jonas_schmid</string>
+    <string name="about_my_gplus">http://plus.google.com/114560018851378206870</string>
+    <string name="about_send_email_with">Send email with&#8230;</string>
 
 </resources>
