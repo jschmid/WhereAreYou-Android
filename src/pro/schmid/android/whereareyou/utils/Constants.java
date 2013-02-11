@@ -25,6 +25,6 @@ public class Constants {
 
 	public static final String BASE_URL = "http://w.schmid.pro/";
 	public static final String FIREBASE_URL = "https://whereareyou.firebaseio.com";
-	public static final String PROTOCOL_VERSION = "v1.0";
+	public static final String PROTOCOL_VERSION = "v1";
 
 }

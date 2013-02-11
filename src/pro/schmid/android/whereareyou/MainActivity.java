@@ -173,7 +173,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 
 			@Override
 			public void firebaseLoaded() {
-				Firebase firebase = mEngine.newFirebase(Constants.FIREBASE_URL).child(Constants.FIREBASE_URL);
+				Firebase firebase = mEngine.newFirebase(Constants.FIREBASE_URL).child(Constants.PROTOCOL_VERSION);
 
 				if (mRoomFromIntent != null) {
 					mCurrentFirebase = firebase.child(mRoomFromIntent);
