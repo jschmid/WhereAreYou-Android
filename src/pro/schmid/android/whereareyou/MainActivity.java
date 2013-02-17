@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -188,8 +189,11 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 					mFirebaseMapManager.setMyLocation(myLocation);
 				}
 
-				invalidateOptionsMenu();
 				setProgressBarIndeterminateVisibility(false);
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+					invalidateOptionsMenu();
+				}
 			}
 		});
 		mEngine.loadEngine(this);
