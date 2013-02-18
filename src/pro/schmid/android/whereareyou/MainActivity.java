@@ -8,6 +8,7 @@ import pro.schmid.android.androidonfire.callbacks.FirebaseLoaded;
 import pro.schmid.android.whereareyou.NameFragment.NameDialogListener;
 import pro.schmid.android.whereareyou.utils.Constants;
 import pro.schmid.android.whereareyou.utils.Utils;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +21,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -172,6 +175,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		mEngine = FirebaseEngine.getInstance();
 		mEngine.setLoadedListener(new FirebaseLoaded() {
 
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void firebaseLoaded() {
 				Firebase firebase = mEngine.newFirebase(Constants.FIREBASE_URL).child(Constants.PROTOCOL_VERSION);
@@ -180,6 +184,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 					mCurrentFirebase = firebase.child(mRoomFromIntent);
 				} else {
 					mCurrentFirebase = firebase.push();
+					showTutorial();
 				}
 
 				mFirebaseMapManager = new FirebaseMapManager(MainActivity.this, mMap, mCurrentFirebase, mUsername);
@@ -197,6 +202,19 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 			}
 		});
 		mEngine.loadEngine(this);
+	}
+
+	protected void showTutorial() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		// Create and show the dialog.
+		DialogFragment newFragment = TutorialCallout.newInstance();
+		newFragment.show(ft, "dialog");
 	}
 
 	// Define a listener that responds to location updates
