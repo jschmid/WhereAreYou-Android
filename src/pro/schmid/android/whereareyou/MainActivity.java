@@ -6,6 +6,7 @@ import pro.schmid.android.androidonfire.Firebase;
 import pro.schmid.android.androidonfire.FirebaseEngine;
 import pro.schmid.android.androidonfire.callbacks.FirebaseLoaded;
 import pro.schmid.android.whereareyou.NameFragment.NameDialogListener;
+import pro.schmid.android.whereareyou.TutorialDialog.TutorialDialogListener;
 import pro.schmid.android.whereareyou.utils.Constants;
 import pro.schmid.android.whereareyou.utils.Utils;
 import android.annotation.TargetApi;
@@ -38,7 +39,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends FragmentActivity implements NameDialogListener {
+public class MainActivity extends FragmentActivity implements NameDialogListener, TutorialDialogListener {
 
 	private FirebaseMapManager mFirebaseMapManager;
 	private FirebaseEngine mEngine;
@@ -213,7 +214,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		ft.addToBackStack(null);
 
 		// Create and show the dialog.
-		DialogFragment newFragment = TutorialCallout.newInstance();
+		DialogFragment newFragment = TutorialDialog.newInstance();
 		newFragment.show(ft, "dialog");
 	}
 
@@ -268,7 +269,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	}
 
 	@Override
-	public void onDialogPositiveClick(NameFragment dialog) {
+	public void onNameDialogPositiveClick(NameFragment dialog) {
 		mUsername = dialog.getUsername();
 		setUsername(mUsername);
 	}
@@ -278,4 +279,8 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		startApplication();
 	}
 
+	@Override
+	public void onTutorialDialogClick() {
+		shareGroup();
+	}
 }

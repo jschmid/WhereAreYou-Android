@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@android:color/transparent" >
+    android:padding="20dp" >
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/tutorial_container"
         style="@style/callout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="sdfp sduih fsdoiuz fsdiou fz" />
+        android:layout_height="wrap_content" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tutorial_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/tutorial_share"
+            android:text="@string/tutorial_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageView
+            android:id="@+id/tutorial_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/tutorial_text"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/share_position"
+            android:src="@android:drawable/ic_menu_share" />
+
+        <TextView
+            android:id="@+id/tutorial_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tutorial_title"
+            android:text="@string/tutorial_text" />
+    </RelativeLayout>
+
+</FrameLayout>

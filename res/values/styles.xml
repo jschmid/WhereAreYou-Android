@@ -11,10 +11,10 @@
     </style>
 
     <style name="callout">
-        <item name="android:paddingBottom">25dp</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">@dimen/tutorial_bottom_padding</item>
+        <item name="android:paddingLeft">@dimen/tutorial_side_padding</item>
+        <item name="android:paddingRight">@dimen/tutorial_side_padding</item>
+        <item name="android:paddingTop">@dimen/tutorial_top_padding</item>
         <item name="android:layout_margin">10dp</item>
         <item name="android:background">@drawable/callout</item>
     </style>

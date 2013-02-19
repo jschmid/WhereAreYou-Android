@@ -13,15 +13,12 @@ import android.widget.EditText;
 public class NameFragment extends DialogFragment {
 
 	public interface NameDialogListener {
-		public void onDialogPositiveClick(NameFragment dialog);
+		public void onNameDialogPositiveClick(NameFragment dialog);
 	}
 
 	private NameDialogListener mListener;
 	private String mUsername;
 	private View mRoot;
-
-	private NameFragment() {
-	}
 
 	public static NameFragment newInstance() {
 		return new NameFragment();
@@ -30,12 +27,11 @@ public class NameFragment extends DialogFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+
 		// Verify that the host activity implements the callback interface
 		try {
-			// Instantiate the NoticeDialogListener so we can send events to the host
 			mListener = (NameDialogListener) activity;
 		} catch (ClassCastException e) {
-			// The activity doesn't implement the interface, throw exception
 			throw new ClassCastException(activity.toString() + " must implement NameDialogListener");
 		}
 	}
@@ -64,7 +60,7 @@ public class NameFragment extends DialogFragment {
 				mUsername = username.getText().toString();
 
 				// Send the positive button event back to the host activity
-				mListener.onDialogPositiveClick(NameFragment.this);
+				mListener.onNameDialogPositiveClick(NameFragment.this);
 			}
 		});
 		return builder.create();

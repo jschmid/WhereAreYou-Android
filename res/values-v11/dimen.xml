@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="tutorial_side_padding">10dp</dimen>
+    <dimen name="tutorial_top_padding">25dp</dimen>
+    <dimen name="tutorial_bottom_padding">10dp</dimen>
+
+</resources>
