@@ -8,6 +8,7 @@ import pro.schmid.android.androidonfire.callbacks.FirebaseLoaded;
 import pro.schmid.android.whereareyou.NameFragment.NameDialogListener;
 import pro.schmid.android.whereareyou.utils.Constants;
 import pro.schmid.android.whereareyou.utils.Utils;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -172,6 +173,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		mEngine = FirebaseEngine.getInstance();
 		mEngine.setLoadedListener(new FirebaseLoaded() {
 
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void firebaseLoaded() {
 				Firebase firebase = mEngine.newFirebase(Constants.FIREBASE_URL).child(Constants.PROTOCOL_VERSION);
