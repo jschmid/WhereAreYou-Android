@@ -1,6 +1,5 @@
 package pro.schmid.android.whereareyou;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
@@ -12,7 +11,6 @@ import pro.schmid.android.androidonfire.callbacks.DataEvent;
 import pro.schmid.android.androidonfire.callbacks.EventType;
 import pro.schmid.android.whereareyou.utils.ColorUtils;
 import pro.schmid.android.whereareyou.utils.Constants;
-import pro.schmid.android.whereareyou.utils.Utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,11 +18,11 @@ import android.location.Location;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -42,7 +40,7 @@ class FirebaseMapManager {
 	private final String mChildName;
 
 	private final Map<String, Marker> mMarkers = new ConcurrentHashMap<String, Marker>();
-	private final Map<String, Polygon> mPolygon = new ConcurrentHashMap<String, Polygon>();
+	private final Map<String, Circle> mCircles = new ConcurrentHashMap<String, Circle>();
 	private final Map<String, String> mNames = new ConcurrentHashMap<String, String>();
 	private final Map<String, Integer> mId = new ConcurrentHashMap<String, Integer>();
 
@@ -110,7 +108,7 @@ class FirebaseMapManager {
 		public void callback(DataSnapshot snapshot, String prevChildName) {
 			String name = snapshot.name();
 			final Marker removed = mMarkers.remove(name);
-			final Polygon polygon = mPolygon.get(name);
+			final Circle polygon = mCircles.get(name);
 
 			if (removed != null || polygon != null) {
 				mActivity.runOnUiThread(new Runnable() {
@@ -185,31 +183,37 @@ class FirebaseMapManager {
 				});
 			}
 
-			// Put or move the accuracy circle
-			double radius = accuracy > Constants.MAX_ACCURACY ? Constants.MAX_ACCURACY : accuracy;
-			ArrayList<LatLng> accuracyPoints = Utils.getCirclePoints(ll, radius);
-			final Polygon polygon = mPolygon.get(parentName);
+			// Find the old circle if available
+			final double radius = accuracy > Constants.MAX_ACCURACY ? Constants.MAX_ACCURACY : accuracy;
+			final Circle oldCircle = mCircles.get(parentName);
 
-			final PolygonOptions polygonOptions = new PolygonOptions()
-					.addAll(accuracyPoints)
-					.strokeColor(ColorUtils.ACCURACY_STROKE_COLORS[colorId])
-					.strokeWidth(4)
-					.fillColor(ColorUtils.ACCURACY_FILL_COLORS[colorId])
-					.geodesic(true);
+			if (oldCircle != null) {
 
-			mActivity.runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-
-					// Remove old polygon
-					if (polygon != null) {
-						polygon.remove();
+				// Move the old circle
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						oldCircle.setCenter(ll);
+						oldCircle.setRadius(radius);
 					}
+				});
+			} else {
 
-					Polygon polygon = mMap.addPolygon(polygonOptions);
-					mPolygon.put(parentName, polygon);
-				}
-			});
+				// Create new circle
+				final CircleOptions accuracyCircle = new CircleOptions()
+						.radius(radius)
+						.strokeColor(ColorUtils.ACCURACY_STROKE_COLORS[colorId])
+						.strokeWidth(4)
+						.fillColor(ColorUtils.ACCURACY_FILL_COLORS[colorId]);
+
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Circle newCircle = mMap.addCircle(accuracyCircle);
+						mCircles.put(parentName, newCircle);
+					}
+				});
+			}
 		}
 	};
 
