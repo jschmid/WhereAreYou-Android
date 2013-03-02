@@ -201,6 +201,7 @@ class FirebaseMapManager {
 
 				// Create new circle
 				final CircleOptions accuracyCircle = new CircleOptions()
+						.center(ll)
 						.radius(radius)
 						.strokeColor(ColorUtils.ACCURACY_STROKE_COLORS[colorId])
 						.strokeWidth(4)
