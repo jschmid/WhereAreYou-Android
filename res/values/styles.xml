@@ -10,6 +10,13 @@
         <item name="android:background">@null</item>
     </style>
 
+    <style name="callout_wrapper">
+        <item name="android:paddingBottom">@dimen/tutorial_wrapper_bottom_padding</item>
+        <item name="android:paddingLeft">@dimen/tutorial_wrapper_side_padding</item>
+        <item name="android:paddingRight">@dimen/tutorial_wrapper_side_padding</item>
+        <item name="android:paddingTop">@dimen/tutorial_wrapper_top_padding</item>
+    </style>
+
     <style name="callout">
         <item name="android:paddingBottom">@dimen/tutorial_bottom_padding</item>
         <item name="android:paddingLeft">@dimen/tutorial_side_padding</item>

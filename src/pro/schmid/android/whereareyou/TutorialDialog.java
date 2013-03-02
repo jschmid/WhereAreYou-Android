@@ -3,6 +3,7 @@ package pro.schmid.android.whereareyou;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
@@ -45,7 +46,12 @@ public class TutorialDialog extends DialogFragment {
 		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-		lp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			lp.gravity = Gravity.TOP | Gravity.RIGHT;
+		} else {
+			lp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+		}
 
 		View v = inflater.inflate(R.layout.tutorial_callout, container);
 
