@@ -14,12 +14,15 @@ public class Constants {
 
 	// General preferences
 	public static final String PREF_NAME = "name";
+	public static final String PREF_SHOW_TUTORIAL = "show_tutorial";
 
 	// Maps preferences
 	public static final String MAPS_PREFS = "maps";
 
 	public static final float MAP_ZOOM = 15;
 	public static final double MAX_ACCURACY = 2500; // The maximum radius of the accuracy circle
+
+	public static final int SHOW_TUTORIAL_TIMES = 3;
 
 	public static final DateFormat DATE_FORMATTER = DateFormat.getDateTimeInstance();
 

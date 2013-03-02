@@ -197,6 +197,14 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	}
 
 	protected void showTutorial() {
+
+		// Do not show the tutorial if it was shown a certain amount of times
+		int times = mPreferences.getInt(Constants.PREF_SHOW_TUTORIAL, 0);
+		if (times >= Constants.SHOW_TUTORIAL_TIMES) {
+			return;
+		}
+		mPreferences.edit().putInt(Constants.PREF_SHOW_TUTORIAL, times + 1).commit();
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
 		if (prev != null) {
@@ -204,7 +212,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		}
 		ft.addToBackStack(null);
 
-		// Create and show the dialog.
+		// Create and show the dialog
 		DialogFragment newFragment = TutorialDialog.newInstance();
 		newFragment.show(ft, "dialog");
 	}
