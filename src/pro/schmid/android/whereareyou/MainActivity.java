@@ -11,12 +11,9 @@ import pro.schmid.android.whereareyou.utils.Constants;
 import pro.schmid.android.whereareyou.utils.Utils;
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +33,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -47,7 +45,6 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	private String mUsername;
 	private String mRoomFromIntent;
 
-	private LocationManager mLocationManager;
 	private GoogleMap mMap;
 
 	private SharedPreferences mPreferences;
@@ -72,8 +69,6 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 			mRoomFromIntent = params.get(0);
 		}
 
-		mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		getUserName();
@@ -90,20 +85,16 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	protected void onResume() {
 		super.onResume();
 
-		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
-
 		if (mMap == null) {
 			mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 			mMap.setMyLocationEnabled(true);
+			mMap.setOnMyLocationChangeListener(mMyLocationListener);
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
-		mLocationManager.removeUpdates(locationListener);
 	}
 
 	@Override
@@ -218,38 +209,6 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		newFragment.show(ft, "dialog");
 	}
 
-	// Define a listener that responds to location updates
-	private final LocationListener locationListener = new LocationListener() {
-
-		private boolean mFirstCenter = true;
-
-		@Override
-		public void onLocationChanged(Location location) {
-			if (mFirebaseMapManager != null) {
-				mFirebaseMapManager.setMyLocation(location);
-
-				if (mFirstCenter) {
-					mFirstCenter = false;
-
-					CameraUpdate newLatLngZoom = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), Constants.MAP_ZOOM);
-					mMap.animateCamera(newLatLngZoom);
-				}
-			}
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
-	};
-
 	private void getUserName() {
 		mUsername = mPreferences.getString(Constants.PREF_NAME, null);
 
@@ -283,4 +242,23 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	public void onTutorialDialogClick() {
 		shareGroup();
 	}
+
+	private final OnMyLocationChangeListener mMyLocationListener = new OnMyLocationChangeListener() {
+
+		private boolean mFirstCenter = true;
+
+		@Override
+		public void onMyLocationChange(Location location) {
+			if (mFirebaseMapManager != null) {
+				mFirebaseMapManager.setMyLocation(location);
+
+				if (mFirstCenter) {
+					mFirstCenter = false;
+
+					CameraUpdate newLatLngZoom = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), Constants.MAP_ZOOM);
+					mMap.animateCamera(newLatLngZoom);
+				}
+			}
+		}
+	};
 }
