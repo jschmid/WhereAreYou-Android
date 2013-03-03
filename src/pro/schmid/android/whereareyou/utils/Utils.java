@@ -6,6 +6,8 @@ import java.util.List;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 public class Utils {
 
@@ -29,5 +31,22 @@ public class Utils {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Check if the device is connected.
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static boolean isOnline(Context context) {
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		}
+
+		return false;
 	}
 }

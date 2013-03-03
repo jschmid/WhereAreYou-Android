@@ -10,7 +10,11 @@ import pro.schmid.android.whereareyou.TutorialDialog.TutorialDialogListener;
 import pro.schmid.android.whereareyou.utils.Constants;
 import pro.schmid.android.whereareyou.utils.Utils;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -55,6 +59,11 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main);
 		setProgressBarIndeterminateVisibility(true);
+
+		if (!Utils.isOnline(this)) {
+			showUserIsOffline();
+			return;
+		}
 
 		int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (googlePlayServicesAvailable != ConnectionResult.SUCCESS) {
@@ -249,6 +258,29 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 	@Override
 	public void onTutorialDialogClick() {
 		shareGroup();
+	}
+
+	/**
+	 * Show a dialog telling the user that he has to be online to use the app.
+	 */
+	private void showUserIsOffline() {
+		Builder builder = new AlertDialog.Builder(this);
+
+		builder
+				.setCancelable(false)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setMessage(R.string.offline_alert_text)
+				.setTitle(R.string.offline_alert_title)
+				.setPositiveButton(android.R.string.ok, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int button) {
+						dialog.dismiss();
+						finish();
+					}
+				});
+
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	private final OnMyLocationChangeListener mMyLocationListener = new OnMyLocationChangeListener() {
