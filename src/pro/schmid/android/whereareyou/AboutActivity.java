@@ -11,6 +11,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/**
+ * Show info about the application
+ */
 public class AboutActivity extends Activity {
 
 	@Override
@@ -18,6 +21,7 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 
+		// Get the application version from Manifest
 		try {
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
@@ -27,9 +31,8 @@ public class AboutActivity extends Activity {
 			// Should not happen
 		}
 
-		ImageButton b;
-
-		b = (ImageButton) findViewById(R.id.button_mail);
+		// Send an email with predefined contents
+		ImageButton b = (ImageButton) findViewById(R.id.button_mail);
 		b.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -42,6 +45,7 @@ public class AboutActivity extends Activity {
 			}
 		});
 
+		// Open Twitter
 		b = (ImageButton) findViewById(R.id.button_twitter);
 		b.setOnClickListener(new OnClickListener() {
 			@Override
@@ -51,6 +55,7 @@ public class AboutActivity extends Activity {
 			}
 		});
 
+		// Open Google+
 		b = (ImageButton) findViewById(R.id.button_gplus);
 		b.setOnClickListener(new OnClickListener() {
 			@Override

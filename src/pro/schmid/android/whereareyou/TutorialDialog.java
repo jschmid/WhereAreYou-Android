@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+/**
+ * Dialog to tell the user that he has now to share the room to others in order to see their position.
+ */
 public class TutorialDialog extends DialogFragment {
 
 	public interface TutorialDialogListener {

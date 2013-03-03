@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+/**
+ * Dialog used to ask the user's name.
+ */
 public class NameFragment extends DialogFragment {
 
 	public interface NameDialogListener {

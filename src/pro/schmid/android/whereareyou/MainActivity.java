@@ -37,6 +37,10 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * Main activity to show the people of a room on a map.
+ * Connects to Firebase, get the user's username, launch the map manager.
+ */
 public class MainActivity extends FragmentActivity implements NameDialogListener, TutorialDialogListener {
 
 	private FirebaseMapManager mFirebaseMapManager;
@@ -56,6 +60,7 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		setContentView(R.layout.activity_main);
 		setProgressBarIndeterminateVisibility(true);
 
+		// Check that Google Play Services is available
 		int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if (googlePlayServicesAvailable != ConnectionResult.SUCCESS) {
 			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(googlePlayServicesAvailable, this, -1);
@@ -63,6 +68,8 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 			return;
 		}
 
+		// Check if the user is coming from a link he clicked (using an existing room)
+		// or if we have to create a new room.
 		Uri data = getIntent().getData();
 		if (data != null) {
 			List<String> params = data.getPathSegments();
@@ -71,6 +78,8 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+		// Get the username.
+		// Once the username is here, it will trigger the map manager.
 		getUserName();
 	}
 
@@ -151,18 +160,28 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		}
 	}
 
+	/**
+	 * Share the group using the Android Intent
+	 */
 	private void shareGroup() {
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, "Come to my group: " + Constants.BASE_URL + mCurrentFirebase.name());
+		String text = getString(R.string.share_text, Constants.BASE_URL + mCurrentFirebase.name());
+		sendIntent.putExtra(Intent.EXTRA_TEXT, text);
 		sendIntent.setType("text/plain");
 		startActivity(sendIntent);
 	}
 
+	/**
+	 * Start the application once everything is settled
+	 */
 	private void startApplication() {
 		loadFirebase();
 	}
 
+	/**
+	 * Load the Firebase engine.
+	 */
 	private void loadFirebase() {
 		mEngine = FirebaseEngine.getInstance();
 		mEngine.setLoadedListener(new FirebaseLoaded() {
@@ -170,8 +189,13 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void firebaseLoaded() {
+
+				setProgressBarIndeterminateVisibility(false);
+
+				// Get the root Firebase
 				Firebase firebase = mEngine.newFirebase(Constants.FIREBASE_URL).child(Constants.PROTOCOL_VERSION);
 
+				// Check if we have to create a new room or join an existing one.
 				if (mRoomFromIntent != null) {
 					mCurrentFirebase = firebase.child(mRoomFromIntent);
 				} else {
@@ -179,15 +203,16 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 					showTutorial();
 				}
 
+				// Create the manager
 				mFirebaseMapManager = new FirebaseMapManager(MainActivity.this, mMap, mCurrentFirebase, mUsername);
 
+				// Set the user location is available already
 				Location myLocation = mMap.getMyLocation();
 				if (myLocation != null) {
 					mFirebaseMapManager.setMyLocation(myLocation);
 				}
 
-				setProgressBarIndeterminateVisibility(false);
-
+				// Change the actionbar now we can share the room
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
 					invalidateOptionsMenu();
 				}
@@ -196,6 +221,9 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		mEngine.loadEngine(this);
 	}
 
+	/**
+	 * Show a dialog telling the user that he has now to share his room to see his friends.
+	 */
 	protected void showTutorial() {
 
 		// Do not show the tutorial if it was shown a certain amount of times
@@ -217,6 +245,15 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		newFragment.show(ft, "dialog");
 	}
 
+	/**
+	 * Get the username.
+	 * First try to get it from the preferences,
+	 * then get a name from the user's google account,
+	 * otherwise ask him to enter a name manually.
+	 * 
+	 * Using the Google account allows to get the username without having to ask his name.
+	 * This removes one dialog and goes straight to the application.
+	 */
 	private void getUserName() {
 		mUsername = mPreferences.getString(Constants.PREF_NAME, null);
 
@@ -235,22 +272,36 @@ public class MainActivity extends FragmentActivity implements NameDialogListener
 		}
 	}
 
+	/**
+	 * The user chose a username.
+	 */
 	@Override
 	public void onNameDialogPositiveClick(NameFragment dialog) {
 		mUsername = dialog.getUsername();
 		setUsername(mUsername);
 	}
 
+	/**
+	 * Set the username and start the application
+	 * 
+	 * @param username
+	 */
 	private void setUsername(String username) {
 		mPreferences.edit().putString(Constants.PREF_NAME, mUsername).commit();
 		startApplication();
 	}
 
+	/**
+	 * The user clicked on the tutorial dialog, share the room.
+	 */
 	@Override
 	public void onTutorialDialogClick() {
 		shareGroup();
 	}
 
+	/**
+	 * Set the new location when we get a new position.
+	 */
 	private final OnMyLocationChangeListener mMyLocationListener = new OnMyLocationChangeListener() {
 
 		private boolean mFirstCenter = true;

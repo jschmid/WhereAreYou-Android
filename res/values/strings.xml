@@ -25,5 +25,6 @@
     <string name="about_send_email_with">Send email with&#8230;</string>
     <string name="tutorial_title">We got your position!</string>
     <string name="tutorial_text">You can now open the menu and share your position with your friends using your favorite IM app. Then come back here to see their position!</string>
+    <string name="share_text">Where are you? I am here: %s</string>
 
 </resources>
