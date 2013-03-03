@@ -26,4 +26,8 @@
         <item name="android:background">@drawable/callout</item>
     </style>
 
+    <style name="callout_title" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
 </resources>

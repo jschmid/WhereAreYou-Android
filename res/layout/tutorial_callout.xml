@@ -12,13 +12,13 @@
 
         <TextView
             android:id="@+id/tutorial_title"
+            style="@style/callout_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/tutorial_share"
-            android:text="@string/tutorial_title"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="@string/tutorial_title" />
 
         <ImageView
             android:id="@+id/tutorial_share"
