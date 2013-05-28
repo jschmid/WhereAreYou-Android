@@ -20,7 +20,7 @@ public class Constants {
 	public static final String MAPS_PREFS = "maps";
 
 	public static final float MAP_ZOOM = 15;
-	public static final double MAX_ACCURACY = 2500; // The maximum radius of the accuracy circle
+	public static final double MAX_ACCURACY = 500; // The maximum radius of the accuracy circle
 
 	public static final int SHOW_TUTORIAL_TIMES = 3;
 
