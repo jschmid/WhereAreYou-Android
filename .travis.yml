@@ -9,3 +9,4 @@ before_install:
   - export ANDROID_HOME=`pwd`/android-sdk-linux
   - export PATH=${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${PATH}
   - android update sdk --filter 1,4 --no-ui --force
+  - android update sdk --no-ui --obsolete --force
